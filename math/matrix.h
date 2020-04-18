@@ -46,10 +46,14 @@ namespace Engine::Math
     //jnl i am not able to initialize the std::Array in the initializer list
     {
       const std::initializer_list<T>* l = std::begin(ll);
-      for(size_t row = 0; row < Rows && row < ll.size(); ++row, ++l)
+      for(size_t row = 0; row < Rows; ++row, ++l)
       {
         auto element = std::begin(*l);
-        for(size_t col = 0; col < Columns && col < l->size(); ++col, ++element) { _data[row][col] = *element; }
+        for(size_t col = 0; col < Columns; ++col, ++element)
+        {
+          if(row < ll.size() && col < l->size()) { _data[row][col] = *element; }
+          else { _data[row][col] = 0; }
+        }
       }
     }
 #pragma warning(pop)
