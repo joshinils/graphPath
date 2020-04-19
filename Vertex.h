@@ -17,5 +17,7 @@ namespace Engine::Map
     }
     ~Vertex() { std::cout << __FUNCTION__ << std::endl; }
     auto const& getPos() const { return _pos; }
+
+    bool operator==(Vertex const& other) const { return this->_pos == other._pos; }
   };
 } // namespace Engine::Map

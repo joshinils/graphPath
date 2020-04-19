@@ -5,9 +5,6 @@ set(CMAKE_CXX_STANDARD 17)
 
 if(UNIX)
 	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++17 -pthread -fpermissive")
-elseif(MSVC)
-	# suppress warning about unknown options -pthread and -fpermissive
-	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++17")
 endif(UNIX)
 
 add_executable("${PROJECT_NAME}" 

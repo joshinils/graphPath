@@ -32,6 +32,22 @@ namespace Engine::Map
     [[deprecated]] Node() { std::cout << __FUNCTION__ << std::endl; }
 
     bool addCloseNeighbor(std::weak_ptr<Node> const& n);
+    void deleteCloseNeighbors()
+    {
+      for(auto& n : _closeNeighbors)
+      {
+        if(n.expired()) continue;
+        n.lock()->deleteFarNeighbor(*this);
+      }
+      _closeNeighbors.clear();
+    }
+
+    void deleteFarNeighbor(Node const& toDelete)
+    {
+      this->_farNeighbors.erase(std::remove_if(_farNeighbors.begin(), _farNeighbors.end(), [&](std::weak_ptr<Node> const& elem) { return toDelete == *elem.lock(); }), _farNeighbors.end());
+    }
+
+    bool operator==(Node const& other) const { return this->_dataVert == other._dataVert; }
 
     Vertex const& getVertex() { return _dataVert; }
     Vertex const& setVertex(Vertex const& v) { return _dataVert = v; }

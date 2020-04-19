@@ -3,7 +3,8 @@
 
 bool Engine::Map::Node::addCloseNeighbor(std::weak_ptr<Node> const& n)
 {
-  if (n.expired()) return false;
+  if(n.expired()) return false;
+  if(this == &(*n.lock()) ) return false;
 
   //TODO check if valid, for example by distance between new nodes position and this position
 
