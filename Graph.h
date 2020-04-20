@@ -13,13 +13,15 @@ namespace Engine::Map
 {
   class Graph
   {
-    const double maxDistance = 1010;
-    const uint32_t maxCloseNeighbors = 2;
+  private:
     std::vector<std::shared_ptr<Node>> _nodes; // TODO make this a bsp if finding a node is too slow
 
   public:
-    Graph() { std::cout << __FUNCTION__ << std::endl; }
-    ~Graph() { std::cout << __FUNCTION__ << std::endl; }
+    const double maxDistance         = 1010;
+    const uint64_t maxCloseNeighbors = 2;
+
+    Graph();
+    ~Graph();
 
     void addVertex(Vertex const& v);
     void renewNeighbors(Node& n);

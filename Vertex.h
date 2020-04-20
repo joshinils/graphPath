@@ -9,15 +9,10 @@ namespace Engine::Map
     bool _isWalkable;
 
   public:
-    Vertex(Engine::Math::vec3 pos = { { 9999 }, { 9999 }, { 9999 } }, bool walkable = true)
-      : _pos(pos)
-      , _isWalkable(walkable)
-    {
-      std::cout << __FUNCTION__ << std::endl;
-    }
-    ~Vertex() { std::cout << __FUNCTION__ << std::endl; }
-    auto const& getPos() const { return _pos; }
+    Vertex(Engine::Math::vec3 pos = { { 9999 }, { 9999 }, { 9999 } }, bool walkable = true);
+    ~Vertex();
 
-    bool operator==(Vertex const& other) const { return this->_pos == other._pos; }
+    Math::vec3 const& getPos() const;
+    bool operator==(Vertex const& other) const;
   };
 } // namespace Engine::Map

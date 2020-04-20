@@ -3,6 +3,10 @@
 
 namespace Engine::Map
 {
+  Graph::Graph() { std::cout << __FUNCTION__ << std::endl; }
+
+  Graph::~Graph() { std::cout << __FUNCTION__ << std::endl; }
+
   void Graph::addVertex(Vertex const& v)
   {
     std::cout << __FUNCTION__ << std::endl;
