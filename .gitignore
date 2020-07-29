@@ -5,3 +5,4 @@ build/*
 .idea/
 images_fake/*
 Thumbs.db
+*.code-workspace
