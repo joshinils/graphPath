@@ -1,9 +1,9 @@
 #pragma once
 
-namespace Engine::Map
-{
-  class Graph;
-}
+//namespace Engine::Map
+//{
+//  class Graph;
+//}
 #include "Graph.h"
 #include "olcPixelGameEngine/olcPixelGameEngine.h"
 #include "plane/Plane.h"

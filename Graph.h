@@ -1,5 +1,6 @@
 #pragma once
 
+class Node;
 #include "Node.h"
 #include "Vertex.h"
 #include "math/matrix.h"

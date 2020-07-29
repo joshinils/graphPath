@@ -1,10 +1,12 @@
 #include "Node.h"
 #include "Aether.h"
+#include <algorithm>
 
 namespace Engine::Map
 {
-  Node::Node(Vertex const& v)
+  Node::Node(Vertex const& v, Graph const& container)
     : _dataVert(v)
+    , maxCloseNeighbors(container.maxCloseNeighbors)
   {
     std::cout << __FUNCTION__ << std::endl;
   }
@@ -18,8 +20,10 @@ namespace Engine::Map
 
     //TODO check if valid, for example by distance between new nodes position and this position
 
-    this->_closeNeighbors.push_back(n);
-    n.lock()->_farNeighbors.push_back(n);
+    double distance = n.lock()->distanceTo(*this);
+
+    this->_closeNeighbors.insert(NodeCapsule(n, distance));
+    n.lock()->_farNeighbors.insert(NodeCapsule(weak_from_this(), distance));
 
     return true;
   }
@@ -28,15 +32,29 @@ namespace Engine::Map
   {
     for(auto& n : _closeNeighbors)
     {
-      if(n.expired()) continue;
-      n.lock()->deleteFarNeighbor(*this);
+      if(n.node.expired()) continue;
+      ((n.node).lock())->deleteFarNeighbor(*this);
     }
     _closeNeighbors.clear();
   }
 
   void Node::deleteFarNeighbor(Node const& toDelete)
   {
-    this->_farNeighbors.erase(std::remove_if(_farNeighbors.begin(), _farNeighbors.end(), [&](std::weak_ptr<Node> const& elem) { return toDelete == *elem.lock(); }), _farNeighbors.end());
+    //this->_farNeighbors.erase(std::remove_if(_farNeighbors.begin(), _farNeighbors.end(), [&](NodeCapsule const& capsule) { return !capsule.node.expired() && toDelete == *capsule.node.lock(); }), _farNeighbors.end());
+
+    bool done = false;
+    while(!done)
+    {
+      for(auto& capsule : this->_farNeighbors)
+      {
+        if(capsule.node.expired() || capsule.node.lock()->getVertex() == toDelete.getVertex())
+        {
+          this->_farNeighbors.erase(capsule);
+          break;
+        }
+      }
+      done = true;
+    }
   }
 
   Vertex const& Node::getVertex() const { return _dataVert; }
@@ -55,7 +73,7 @@ namespace Engine::Map
 
     for(auto const& other : _closeNeighbors)
     {
-      auto const& otherPos{ other.lock()->_dataVert.getPos() };
+      auto const& otherPos{ other.node.lock()->_dataVert.getPos() };
       renderer.DrawArrow({ pos.x(), pos.y() }, { otherPos.x(), otherPos.y() }, 2, olc::Pixel(200, 200, 200), olc::VERY_DARK_GREY);
     }
 
@@ -63,5 +81,11 @@ namespace Engine::Map
     ss << '(' << std::fixed << std::setprecision(1) << pos.x() << ", " << pos.y() << ')';
     renderer.DrawString((double)pos.x() + 1, (double)pos.y() + 1, ss.str(), olc::VERY_DARK_GREY, 1);
     renderer.DrawString((double)pos.x(), pos.y(), ss.str(), olc::WHITE, 1);
+  }
+
+  double Node::distanceTo(Node const& other) const
+  {
+    auto foo = this->getVertex().getPos() - other.getVertex().getPos();
+    return std::sqrt(float(foo * foo));
   }
 } // namespace Engine::Map

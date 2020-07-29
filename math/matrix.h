@@ -75,7 +75,7 @@ namespace Engine::Math
 
     inline constexpr size_t rows() const { return Rows; }
 
-    inline bool operator==(Matrix const& m) const
+    inline bool operator==(Matrix<Rows, Columns> const& m) const
     {
       if(this == &m) return true;
 
